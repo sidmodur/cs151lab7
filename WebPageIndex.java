@@ -64,8 +64,24 @@ public class WebPageIndex {
 
 	// The main method is an application using a WebPageIndex
 	public static void main(String[] args) throws IOException {
-			WebPageIndex wpi = new WebPageIndex(args[0]);
-			System.out.println("Frequency and index of words in " + wpi.getUrl());
+		WebPageIndex wpi = null;
+		try {
+			wpi = new WebPageIndex(args[0]);
+		} catch (IOException e) {
+			System.out.println("the resource at: " + args[0]
+			+ " could not be located or does not exist.");
+			System.exit(1);
+		}
+		System.out.println("Frequency and index of words in " + wpi.getUrl());
+		Iterator<String> words = wpi.words();
+		while(words.hasNext()) {
+			String word = words.next();
+			List<Integer> locations = wpi.getLocations(word);
+			System.out.printf("%25s %7.5f ", word, locations.size() / wpi.wordCount);
+			System.out.println(locations);
+		}
+		System.out.println();
+		System.out.println("Height: " + wpi.wordMap.getHeight());
 	}
 
 	/*
